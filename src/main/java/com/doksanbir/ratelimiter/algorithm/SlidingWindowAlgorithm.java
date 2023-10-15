@@ -4,7 +4,9 @@ import com.doksanbir.ratelimiter.exception.RateLimitExceededException;
 import com.doksanbir.ratelimiter.model.AlgorithmType;
 import com.doksanbir.ratelimiter.model.User;
 import com.doksanbir.ratelimiter.config.RateLimitAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -12,14 +14,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 
 @Slf4j
+@Component
 public class SlidingWindowAlgorithm implements RateLimitAlgorithm {
     private final ConcurrentHashMap<Long, ConcurrentLinkedQueue<Long>> timestamps = new ConcurrentHashMap<>();
-    private final long timeWindowInMillis;
-    private final int maxRequests;
+    @Value("${slidingWindow.timeWindowInMillis}")
+    private long timeWindowInMillis;
 
-    public SlidingWindowAlgorithm(long timeWindowInMillis, int maxRequests) {
-        this.timeWindowInMillis = timeWindowInMillis;
-        this.maxRequests = maxRequests;
+    @Value("${slidingWindow.maxRequests}")
+    private int maxRequests;
+
+    public SlidingWindowAlgorithm() {
     }
 
     @Override
@@ -53,7 +57,6 @@ public class SlidingWindowAlgorithm implements RateLimitAlgorithm {
             try {
                 log.warn("Rate limit exceeded for user: {}", user.getId());
             } catch (Exception e) {
-                // Log the failure to the same or a different logger
                 log.error("Logging failed: ", e);
             }
             throw new RateLimitExceededException("Rate limit exceeded");

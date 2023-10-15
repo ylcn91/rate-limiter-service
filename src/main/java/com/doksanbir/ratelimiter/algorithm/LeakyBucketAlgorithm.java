@@ -4,6 +4,8 @@ import com.doksanbir.ratelimiter.config.RateLimitAlgorithm;
 import com.doksanbir.ratelimiter.model.AlgorithmType;
 import com.doksanbir.ratelimiter.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
@@ -11,14 +13,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
+@Component
 public class LeakyBucketAlgorithm implements RateLimitAlgorithm {
 
     private final ConcurrentHashMap<Long, Long> lastRequestTime = new ConcurrentHashMap<>();
-    private final long leakInterval;
+
+    @Value("${leakyBucket.leakInterval}")
+    private long leakInterval;
     private final AtomicBoolean shutdown = new AtomicBoolean(false);
 
-    public LeakyBucketAlgorithm(long leakInterval, ScheduledExecutorService scheduler) {
-        this.leakInterval = leakInterval;
+    public LeakyBucketAlgorithm(ScheduledExecutorService scheduler) {
 
         // Schedule a task to refill the buckets every leakInterval milliseconds.
         scheduler.scheduleAtFixedRate(() -> {

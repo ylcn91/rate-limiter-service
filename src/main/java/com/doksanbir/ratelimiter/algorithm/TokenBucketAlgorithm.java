@@ -8,17 +8,24 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+
 
 @Slf4j
+@Component
 public class TokenBucketAlgorithm implements RateLimitAlgorithm {
     private final ConcurrentHashMap<Long, AtomicLong> tokenStorage = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, AtomicLong> lastRefillTimestampPerUser = new ConcurrentHashMap<>();
-    private final long tokensPerSecond;
-    private final long bucketSize;
+    @Value("${tokenBucket.tokensPerSecond}")
+    private long tokensPerSecond;
 
-    public TokenBucketAlgorithm(long tokensPerSecond, long bucketSize) {
-        this.tokensPerSecond = tokensPerSecond;
-        this.bucketSize = bucketSize;
+    @Value("${tokenBucket.bucketSize}")
+    private long bucketSize;
+
+
+    public TokenBucketAlgorithm() {
+
     }
 
     @Override

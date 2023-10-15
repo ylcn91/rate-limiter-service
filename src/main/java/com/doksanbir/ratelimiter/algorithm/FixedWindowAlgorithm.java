@@ -6,12 +6,14 @@ import com.doksanbir.ratelimiter.model.User;
 import com.doksanbir.ratelimiter.config.RateLimitAlgorithm;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.LongAdder;
 
 @Slf4j
+@Component
 public class FixedWindowAlgorithm implements RateLimitAlgorithm {
 
     private final ConcurrentMap<Long, LongAdder> requestCounts = new ConcurrentHashMap<>();

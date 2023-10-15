@@ -5,6 +5,8 @@ import com.doksanbir.ratelimiter.model.User;
 import com.doksanbir.ratelimiter.model.UserRole;
 import com.doksanbir.ratelimiter.config.RateLimitAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.locks.Condition;
@@ -13,6 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.Comparator;
 
 @Slf4j
+@Component
 public class PriorityQueueRateLimiting implements RateLimitAlgorithm {
 
     private final PriorityBlockingQueue<User> userQueue;
@@ -20,7 +23,7 @@ public class PriorityQueueRateLimiting implements RateLimitAlgorithm {
     private final Lock lock;
     private final Condition condition;
 
-    public PriorityQueueRateLimiting(int maxQueueSize) {
+    public PriorityQueueRateLimiting(@Value("${priorityQueue.maxQueueSize}") int maxQueueSize) {
         this.userQueue = new PriorityBlockingQueue<>(maxQueueSize, Comparator.comparingInt(this::getPriority));
         this.maxQueueSize = maxQueueSize;
         this.lock = new ReentrantLock(true); // Make the lock fair

@@ -9,8 +9,10 @@ import com.doksanbir.ratelimiter.model.User;
 import com.doksanbir.ratelimiter.config.RateLimitAlgorithm;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class AdaptiveRateLimiting implements RateLimitAlgorithm {
 
     private final ConcurrentHashMap<Long, AtomicLong> lastAccessTime = new ConcurrentHashMap<>();
