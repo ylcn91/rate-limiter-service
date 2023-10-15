@@ -35,4 +35,4 @@ java -jar target/ratelimiter.jar
 - `/api/algorithm`: Algorithm choice and configuration
 - `/dynamic/{algorithmType}`: Dynamic endpoints for algorithm PoCs
 
-## it's still work in progress
+**## it's still work in progress**
