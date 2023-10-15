@@ -32,7 +32,7 @@ java -jar target/ratelimiter.jar
 ## API Endpoints
 
 - `/api/user`: User management API
-- `/api/algorithm`: Algorithm choice and configuration
+- `/api/poc`: Algorithm choice and configuration
 - `/dynamic/{algorithmType}`: Dynamic endpoints for algorithm PoCs
 
 **## it's still work in progress**
