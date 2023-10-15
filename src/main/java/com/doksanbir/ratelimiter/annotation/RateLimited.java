@@ -3,6 +3,10 @@ package com.doksanbir.ratelimiter.annotation;
 
 import com.doksanbir.ratelimiter.model.AlgorithmType;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+@Retention(RetentionPolicy.RUNTIME)
 public @interface RateLimited {
     AlgorithmType algorithmType() default AlgorithmType.TOKEN_BUCKET;
 

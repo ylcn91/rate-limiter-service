@@ -24,11 +24,11 @@ public class SlidingWindowAlgorithm implements RateLimitAlgorithm {
 
     @Override
     public boolean shouldLimitRequest(User user) {
-        return !tryConsume(user);
+        return canConsume(user);
     }
 
     @Override
-    public boolean tryConsume(User user) {
+    public boolean canConsume(User user) {
         long currentTime = System.currentTimeMillis();
         AtomicBoolean shouldAllowRequest = new AtomicBoolean(true);
 
@@ -59,7 +59,7 @@ public class SlidingWindowAlgorithm implements RateLimitAlgorithm {
             throw new RateLimitExceededException("Rate limit exceeded");
         }
 
-        return shouldAllowRequest.get();
+        return !shouldAllowRequest.get();
     }
 
 

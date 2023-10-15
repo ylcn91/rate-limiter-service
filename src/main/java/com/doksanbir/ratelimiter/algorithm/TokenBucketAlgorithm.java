@@ -23,11 +23,11 @@ public class TokenBucketAlgorithm implements RateLimitAlgorithm {
 
     @Override
     public boolean shouldLimitRequest(User user) {
-        return !tryConsume(user); // Invert the value of tryConsume
+        return canConsume(user); // Invert the value of tryConsume
     }
 
     @Override
-    public boolean tryConsume(User user) {
+    public boolean canConsume(User user) {
         long userId = user.getId();
         AtomicLong userTokens = tokenStorage.computeIfAbsent(userId, k -> new AtomicLong(bucketSize));
         AtomicLong lastRefillTimestamp = lastRefillTimestampPerUser.computeIfAbsent(userId, k -> new AtomicLong(System.currentTimeMillis()));
@@ -40,7 +40,7 @@ public class TokenBucketAlgorithm implements RateLimitAlgorithm {
             tokens = Math.min(tokens + tokensToAdd, bucketSize);
 
             return (tokens > 0) ? tokens - 1 : 0;
-        }) > 0;
+        }) <= 0;
     }
 
     @Override

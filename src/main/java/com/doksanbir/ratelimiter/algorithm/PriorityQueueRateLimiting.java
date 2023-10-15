@@ -37,26 +37,26 @@ public class PriorityQueueRateLimiting implements RateLimitAlgorithm {
 
     @Override
     public boolean shouldLimitRequest(User user) {
-        return !tryConsume(user);
+        return canConsume(user);
     }
 
     @Override
-    public boolean tryConsume(User user) {
+    public boolean canConsume(User user) {
         boolean acquired = false;
         try {
             acquired = lock.tryLock();
             if (!acquired) {
-                return false; // Lock was not acquired; another thread is in this method
+                return true; // Lock was not acquired; another thread is in this method
             }
 
             if (userQueue.size() >= maxQueueSize) {
                 log.warn("Rate limiting user {} as the queue is full.", user.getUsername());
-                return false;
+                return true;
             }
 
             userQueue.offer(user);
             log.info("User {} added to priority queue.", user.getUsername());
-            return true;
+            return false;
 
         } finally {
             if (acquired) {

@@ -40,7 +40,7 @@ public class FixedWindowAlgorithm implements RateLimitAlgorithm {
     }
 
     @Override
-    public boolean tryConsume(User user) throws RateLimitExceededException {
+    public boolean canConsume(User user) throws RateLimitExceededException {
         if (shouldLimitRequest(user)) {
             try {
                 log.warn("Rate limit exceeded for user {}", user.getId());
@@ -50,7 +50,7 @@ public class FixedWindowAlgorithm implements RateLimitAlgorithm {
             throw new RateLimitExceededException("Rate limit exceeded");
         } else {
             requestCounts.get(user.getId()).increment();
-            return true;
+            return false;
         }
     }
 

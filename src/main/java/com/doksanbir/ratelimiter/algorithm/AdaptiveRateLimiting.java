@@ -46,17 +46,17 @@ public class AdaptiveRateLimiting implements RateLimitAlgorithm {
     }
 
     @Override
-    public boolean tryConsume(User user) {
+    public boolean canConsume(User user) {
         if (shouldLimitRequest(user)) {
             try {
                 log.warn("Rate limit exceeded for user {}", user.getId());
             } catch (Exception e) {
                 log.error("Logging failed: ", e);
             }
-            return false;
+            return true;
         } else {
             requestCount.get(user.getId()).increment();
-            return true;
+            return false;
         }
     }
 

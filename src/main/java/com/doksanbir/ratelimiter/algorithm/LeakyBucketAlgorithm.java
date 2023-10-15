@@ -36,19 +36,19 @@ public class LeakyBucketAlgorithm implements RateLimitAlgorithm {
 
     @Override
     public boolean shouldLimitRequest(User user) {
-        return !tryConsume(user);
+        return canConsume(user);
     }
 
     @Override
-    public boolean tryConsume(User user) {
+    public boolean canConsume(User user) {
         long currentTime = System.currentTimeMillis();
 
         Long previousTime = lastRequestTime.get(user.getId());
         if (previousTime == null || currentTime - previousTime >= leakInterval) {
-            return true;
+            return false;
         } else {
             log.warn("Rate limit exceeded for user: {}", user.getUsername());
-            return false;
+            return true;
         }
     }
 
